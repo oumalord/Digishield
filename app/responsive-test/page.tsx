@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Monitor, Smartphone, Tablet, Laptop } from "lucide-react"
 
 const breakpoints = [
@@ -28,6 +28,14 @@ export default function ResponsiveTestPage() {
   const [selectedBreakpoint, setSelectedBreakpoint] = useState(breakpoints[0])
   const [selectedPage, setSelectedPage] = useState(testPages[0])
   const [showGrid, setShowGrid] = useState(false)
+  const [viewport, setViewport] = useState({ innerWidth: 1200, innerHeight: 800 })
+
+  useEffect(() => {
+    const update = () => setViewport({ innerWidth: window.innerWidth, innerHeight: window.innerHeight })
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-100 pt-16">
@@ -139,8 +147,8 @@ export default function ResponsiveTestPage() {
             <div
               className="relative border-8 border-gray-800 rounded-lg overflow-hidden shadow-2xl"
               style={{
-                width: Math.min(selectedBreakpoint.width + 16, window.innerWidth - 100),
-                height: Math.min(selectedBreakpoint.height + 16, window.innerHeight - 300),
+                width: Math.min(selectedBreakpoint.width + 16, viewport.innerWidth - 100),
+                height: Math.min(selectedBreakpoint.height + 16, viewport.innerHeight - 300),
               }}
             >
               {/* Grid Overlay */}
@@ -165,8 +173,8 @@ export default function ResponsiveTestPage() {
                   width: selectedBreakpoint.width,
                   height: selectedBreakpoint.height,
                   transform: `scale(${Math.min(
-                    (window.innerWidth - 100) / selectedBreakpoint.width,
-                    (window.innerHeight - 300) / selectedBreakpoint.height,
+                    (viewport.innerWidth - 100) / selectedBreakpoint.width,
+                    (viewport.innerHeight - 300) / selectedBreakpoint.height,
                     1,
                   )})`,
                   transformOrigin: "top left",
