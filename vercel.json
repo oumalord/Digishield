@@ -1,10 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "functions": {
-    "app/Api/**/route.js": { "runtime": "nodejs18.x" },
-    "app/Api/**/route.ts": { "runtime": "nodejs18.x" }
-  }
+  "installCommand": "npm install"
 }
 
 
