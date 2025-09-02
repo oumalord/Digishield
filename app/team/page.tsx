@@ -124,13 +124,15 @@ export default function TeamPage() {
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
                 <div className="aspect-square relative bg-gray-200 rounded-full overflow-hidden">
-                  <img
+                  <Image
                     src={member.image || "/images/team-placeholder.svg"}
                     alt={member.name}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/team-placeholder.svg";
+                    fill
+                    sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                    className="object-cover"
+                    priority={index < 3}
+                    onError={(e: any) => {
+                      e.currentTarget.src = "/images/team-placeholder.svg"
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end rounded-full">

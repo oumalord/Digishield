@@ -73,6 +73,7 @@ export default function Navigation() {
             <button
               onClick={toggleMenu}
               className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"
+              aria-expanded={isOpen}
               aria-label="Toggle menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -82,15 +83,14 @@ export default function Navigation() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden mobile-menu">
-            <div className="mobile-menu-content">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200 overflow-y-auto">
+          <div className="md:hidden fixed top-16 left-0 right-0 z-50">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200 shadow-lg">
                 {navigationItems.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={closeMenu}
-                    className={`mobile-menu-item transition-colors ${
+                    className={`block px-4 py-3 rounded transition-colors ${
                       pathname === item.href ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:text-blue-600"
                     }`}
                   >
@@ -104,7 +104,6 @@ export default function Navigation() {
                     </Button>
                   </Link>
                 </div>
-              </div>
             </div>
           </div>
         )}
