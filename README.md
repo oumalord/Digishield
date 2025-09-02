@@ -1,3 +1,11 @@
+Deployment on Vercel
+
+- Required env vars (Project Settings → Environment Variables):
+  - NEXT_PUBLIC_SUPABASE_URL
+  - NEXT_PUBLIC_SUPABASE_ANON_KEY
+  - SUPABASE_SERVICE_ROLE_KEY (server-side routes only)
+- Node 18+ is required (set via package.json engines).
+- Functions that use fs/path are forced to Node runtime via vercel.json.
 # Digishield Communication Solutions Platform
 
 A comprehensive cybersecurity awareness platform for Kenya, built with Next.js and Supabase.
