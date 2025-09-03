@@ -56,12 +56,12 @@ export default function DashboardHero() {
 
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image (show full image on all screens) */}
-      <div className="absolute inset-0 z-0 bg-black">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
         <img
           src={currentImage.url || "/placeholder.svg"}
           alt={currentImage.title}
-          className="w-full h-full object-contain object-center transition-opacity duration-1000"
+          className="w-full h-full object-cover transition-opacity duration-1000"
         />
         <div className="absolute inset-0 bg-black/50"></div>
       </div>
