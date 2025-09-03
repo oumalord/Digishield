@@ -1,4 +1,12 @@
 import type React from "react"
+import type { Viewport } from "next"
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+}
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
