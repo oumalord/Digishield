@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { subscribeToNewsletter } from "@/lib/database-operations"
+import { supabaseAdmin, hasServiceRole } from "@/lib/supabase-admin"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Basic CORS for safety (same-origin calls won't need this, but mobile proxies may)
@@ -27,10 +28,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: "Email is required" })
     }
 
-    const result = await subscribeToNewsletter({ email, name })
-    if (!result.success) {
-      return res.status(400).json({ error: result.error || "Failed to subscribe" })
+    // Prefer service role on the server to bypass RLS safely
+    if (hasServiceRole && supabaseAdmin) {
+      const { data, error } = await supabaseAdmin
+        .from("newsletter_subscriptions")
+        .upsert({ email, name: name ?? null }, { onConflict: "email" })
+        .select()
+        .single()
+      if (error) return res.status(400).json({ error: error.message })
+      return res.status(200).json({ success: true, data })
     }
+
+    // Fallback to anon client (requires RLS policy allowing insert on this table)
+    const result = await subscribeToNewsletter({ email, name })
+    if (!result.success) return res.status(400).json({ error: result.error || "Failed to subscribe" })
     return res.status(200).json({ success: true, data: result.data })
   } catch (e: any) {
     return res.status(500).json({ error: e?.message || "Unexpected error" })

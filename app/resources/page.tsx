@@ -241,8 +241,6 @@ export default function ResourcesPage() {
                   }
                   
                   try {
-                    console.log("Submitting newsletter subscription:", { email })
-                    
                     const res = await fetch("/api/newsletter/subscribe", {
                       method: "POST",
                       headers: { 
@@ -252,27 +250,28 @@ export default function ResourcesPage() {
                       body: JSON.stringify({ email }),
                     })
                     
-                    console.log("Response status:", res.status)
-                    
                     if (!res.ok) {
                       const errorText = await res.text()
-                      console.error("Response error text:", errorText)
-                      
-                      try {
-                        const errorData = JSON.parse(errorText)
-                        throw new Error(errorData?.error || "Subscription failed")
-                      } catch (parseError) {
-                        throw new Error(`Server error: ${res.status} - ${errorText}`)
-                      }
+                      let message = "Subscription failed"
+                      try { message = (JSON.parse(errorText)?.error) || message } catch {}
+                      throw new Error(message)
                     }
                     
-                    const data = await res.json()
-                    console.log("Success response:", data)
-                    alert("Thank you for subscribing to our newsletter!")
                     ;(e.target as HTMLFormElement).reset()
+                    const toast = (window as any).sonner || null
+                    if (toast && toast.toast) {
+                      toast.toast("Subscribed!", { description: "Thank you for subscribing to our newsletter." })
+                    } else {
+                      console.log("Subscribed to newsletter")
+                    }
                   } catch (err: any) {
-                    console.error("Newsletter subscription error:", err)
-                    alert(err?.message || "Subscription failed. Please try again.")
+                    const toast = (window as any).sonner || null
+                    const msg = err?.message || "Subscription failed. Please try again."
+                    if (toast && toast.toast) {
+                      toast.toast("Subscription failed", { description: msg })
+                    } else {
+                      console.error("Newsletter subscription error:", msg)
+                    }
                   }
                 }}
                 className="flex flex-col sm:flex-row"
