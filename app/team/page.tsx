@@ -120,7 +120,7 @@ export default function TeamPage() {
             <p className="text-xl text-gray-600">The visionary leaders driving our cybersecurity mission</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {teamMembers.map((member, index) => (
               <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
                 <div className="aspect-square relative bg-gray-200 rounded-full overflow-hidden">

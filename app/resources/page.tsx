@@ -162,15 +162,35 @@ export default function ResourcesPage() {
                       <span>{item.size}</span>
                       <span>{item.downloads.toLocaleString()} downloads</span>
                     </div>
-
-                    <a
-                      href={`/api/resources/download?id=${encodeURIComponent(item.title)}&file=${encodeURIComponent(item.title.toLowerCase().replace(/\s+/g, '-') + '.pdf')}`}
+                    <button
+                      onClick={async () => {
+                        const file = `${item.title.toLowerCase().replace(/\s+/g, '-')}.pdf`
+                        const url = `/api/resources/download?id=${encodeURIComponent(item.title)}&file=${encodeURIComponent(file)}`
+                        try {
+                          const res = await fetch(url)
+                          if (!res.ok) {
+                            throw new Error("File not available yet. Please check back later.")
+                          }
+                          const blob = await res.blob()
+                          const dl = document.createElement("a")
+                          dl.href = URL.createObjectURL(blob)
+                          dl.download = file
+                          document.body.appendChild(dl)
+                          dl.click()
+                          document.body.removeChild(dl)
+                          URL.revokeObjectURL(dl.href)
+                        } catch (err: any) {
+                          const toast = (window as any).sonner || null
+                          const msg = err?.message || "Download failed"
+                          if (toast && toast.toast) toast.toast("Download", { description: msg })
+                          else console.error("Download error:", msg)
+                        }
+                      }}
                       className="w-full btn-primary flex items-center justify-center"
-                      download
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Download
-                    </a>
+                    </button>
                   </div>
                 ))}
               </div>
